@@ -1,4 +1,4 @@
-# PadelPoint
+# Padel MVP Manager
 
 Sistema de **reservas de pistas de pádel** para el club ficticio **Club Punto Verde**.
 
