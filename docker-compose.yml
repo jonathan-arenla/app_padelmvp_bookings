@@ -1,0 +1,89 @@
+# PadelPoint — DB + API + Expo Web
+#
+#   docker compose up --build
+#   → App web:  http://localhost:8082
+#   → API:      http://localhost:4001
+#   → Postgres: localhost:5433
+#
+# Solo backend:
+#   docker compose up --build api db
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: padelpoint-db
+    environment:
+      POSTGRES_USER: padel
+      POSTGRES_PASSWORD: padel
+      POSTGRES_DB: padelpoint
+    ports:
+      - "5433:5432"
+    volumes:
+      - padelpoint_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U padel -d padelpoint"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: padelpoint-api
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./api/.env
+    environment:
+      DATABASE_URL: postgresql://padel:padel@db:5432/padelpoint?schema=public
+      JWT_SECRET: ${JWT_SECRET:-dev-padelpoint-secret}
+      JWT_EXPIRES_IN: 30d
+      ENABLE_DEV_LOGIN: "true"
+      ALLOW_MOCK_GOOGLE: ${ALLOW_MOCK_GOOGLE:-true}
+      PORT: 4001
+    ports:
+      - "4001:4001"
+    volumes:
+      - ./api/src:/app/src
+      - ./api/prisma:/app/prisma
+      - /app/node_modules
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: padelpoint-web
+    depends_on:
+      - api
+    env_file:
+      - ./app/.env
+    environment:
+      CI: "1"
+      EXPO_NO_TELEMETRY: "1"
+      REACT_NATIVE_PACKAGER_HOSTNAME: "0.0.0.0"
+      NODE_ENV: development
+      EXPO_PUBLIC_API_URL: http://localhost:4001
+      EXPO_PUBLIC_DEMO_MODE: "false"
+      EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: ${EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID:-}
+      EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: ${EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID:-}
+      EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID: ${EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID:-}
+      EXPO_PUBLIC_EXPO_PROJECT_FULL_NAME: ${EXPO_PUBLIC_EXPO_PROJECT_FULL_NAME:-@anonymous/padelpoint}
+    ports:
+      - "8082:8081"
+    volumes:
+      - ./app/src:/app/src
+      - ./app/App.tsx:/app/App.tsx
+      - ./app/app.json:/app/app.json
+      - ./app/babel.config.js:/app/babel.config.js
+      - ./app/assets:/app/assets
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+volumes:
+  padelpoint_pg:

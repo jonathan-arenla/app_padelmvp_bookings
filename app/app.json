@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "PadelPoint",
+    "slug": "padelpoint",
+    "scheme": "padelpoint",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "icon": "./assets/logo.png",
+    "splash": {
+      "image": "./assets/logo.png",
+      "backgroundColor": "#0F2E28",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.padelpoint.app"
+    },
+    "android": {
+      "package": "com.padelpoint.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#0F2E28"
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": false,
+          "data": [{ "scheme": "com.padelpoint.app", "pathPrefix": "/oauthredirect" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/logo.png",
+      "name": "PadelPoint",
+      "shortName": "PadelPoint",
+      "backgroundColor": "#0F2E28",
+      "themeColor": "#1B6B5A"
+    },
+    "plugins": ["expo-font"]
+  }
+}
