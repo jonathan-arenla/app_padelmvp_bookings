@@ -4,6 +4,7 @@
     "slug": "padelpoint",
     "scheme": "padelpoint",
     "version": "1.0.0",
+    "jsEngine": "hermes",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "icon": "./assets/logo.png",
@@ -39,6 +40,9 @@
       "backgroundColor": "#0F2E28",
       "themeColor": "#1B6B5A"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font",
+      "@react-native-google-signin/google-signin"
+    ]
   }
 }

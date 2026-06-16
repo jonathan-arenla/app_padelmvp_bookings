@@ -1,0 +1,24 @@
+{
+  "error" : {
+    "code" : 64,
+    "domain" : "ArgumentParserInternal.ExitCode",
+    "userInfo" : {
+
+    }
+  },
+  "info" : {
+    "arguments" : [
+      "devicectl",
+      "list",
+      "--json-output",
+      "tmp.json"
+    ],
+    "commandType" : "devicectl.list",
+    "environment" : {
+      "TERM" : "xterm-256color"
+    },
+    "jsonVersion" : 3,
+    "outcome" : "failed",
+    "version" : "518.31"
+  }
+}

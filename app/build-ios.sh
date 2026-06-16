@@ -1,4 +1,6 @@
 #!/bin/bash
+cd "$(dirname "$0")"
+export EXPO_PROJECT_ROOT=$(pwd)
 
 echo "=========================================="
 echo "🎾 PadelMVP - Gestor de Despliegue 🎾"
@@ -16,7 +18,7 @@ case $opcion in
     1)
         echo ""
         echo "Iniciando servidor de desarrollo..."
-        npx expo start
+        /opt/homebrew/opt/node@20/bin/npx expo start
         ;;
     2)
         echo ""
@@ -27,7 +29,8 @@ case $opcion in
         echo ""
         echo "Compilando versión Release para tu iPhone físico..."
         echo "⚠️  Asegúrate de tener el iPhone conectado por cable y desbloqueado."
-        npx expo run:ios --configuration Release --device
+        echo "Node version: $(node -v)"
+        EXPO_PROJECT_ROOT=$(pwd) CI=1 EXPO_NO_INTERACTIVE=1 /opt/homebrew/opt/node@20/bin/npx expo run:ios --configuration Release --device 00008140-000E698A0C6A801C --port 8082
         ;;
     4)
         echo "Saliendo..."
