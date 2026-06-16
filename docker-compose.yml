@@ -21,7 +21,7 @@ services:
     volumes:
       - padelpoint_pg:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U padel -d padelpoint"]
+      test: [ "CMD-SHELL", "pg_isready -U padel -d padelpoint" ]
       interval: 3s
       timeout: 3s
       retries: 20
@@ -38,7 +38,6 @@ services:
     env_file:
       - ./api/.env
     environment:
-      DATABASE_URL: postgresql://padel:padel@db:5432/padelpoint?schema=public
       JWT_SECRET: ${JWT_SECRET:-dev-padelpoint-secret}
       JWT_EXPIRES_IN: 30d
       ENABLE_DEV_LOGIN: "true"
@@ -73,7 +72,7 @@ services:
       EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID: ${EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID:-}
       EXPO_PUBLIC_EXPO_PROJECT_FULL_NAME: ${EXPO_PUBLIC_EXPO_PROJECT_FULL_NAME:-@anonymous/padelpoint}
     ports:
-      - "8082:8081"
+      - "8081:8081"
     volumes:
       - ./app/src:/app/src
       - ./app/App.tsx:/app/App.tsx

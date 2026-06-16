@@ -14,11 +14,31 @@ const bookings_1 = require("./routes/bookings");
 const clubMessages_1 = require("./routes/clubMessages");
 const tournaments_1 = require("./routes/tournaments");
 const stats_1 = require("./routes/stats");
+const prisma_1 = require("./lib/prisma");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json({ limit: "1mb" }));
 app.use((0, morgan_1.default)("dev"));
 app.get("/health", (_req, res) => res.json({ ok: true, service: "padelpoint-api", ts: Date.now() }));
+app.get("/debug-db", (_req, res) => {
+    const url = process.env.DATABASE_URL;
+    if (!url)
+        return res.json({ status: "undefined" });
+    const maskedUrl = url.replace(/:([^:@\s]+)@/, ':***@');
+    res.json({ database_url: maskedUrl });
+});
+app.get("/debug-query", async (_req, res) => {
+    try {
+        const result = await Promise.race([
+            prisma_1.prisma.$queryRaw `SELECT 1 as val`,
+            new Promise((_, reject) => setTimeout(() => reject(new Error("Query timeout of 5 seconds")), 5000))
+        ]);
+        res.json({ ok: true, result });
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message || err.toString() });
+    }
+});
 app.use("/auth", auth_1.authRouter);
 app.use("/me", me_1.meRouter);
 app.use("/club", club_1.clubRouter);
