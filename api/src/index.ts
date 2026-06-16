@@ -17,6 +17,12 @@ app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
 
 app.get("/health", (_req, res) => res.json({ ok: true, service: "padelpoint-api", ts: Date.now() }));
+app.get("/debug-db", (_req, res) => {
+  const url = process.env.DATABASE_URL;
+  if (!url) return res.json({ status: "undefined" });
+  const maskedUrl = url.replace(/:([^:@\s]+)@/, ':***@');
+  res.json({ database_url: maskedUrl });
+});
 
 app.use("/auth", authRouter);
 app.use("/me", meRouter);
