@@ -23,6 +23,17 @@ app.get("/debug-db", (_req, res) => {
   const maskedUrl = url.replace(/:([^:@\s]+)@/, ':***@');
   res.json({ database_url: maskedUrl });
 });
+app.get("/debug-query", async (_req, res) => {
+  try {
+    const result = await Promise.race([
+      prisma.$queryRaw`SELECT 1 as val`,
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Query timeout of 5 seconds")), 5000))
+    ]);
+    res.json({ ok: true, result });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || err.toString() });
+  }
+});
 
 app.use("/auth", authRouter);
 app.use("/me", meRouter);
