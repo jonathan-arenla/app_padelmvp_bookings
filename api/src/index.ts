@@ -9,6 +9,7 @@ import { bookingsRouter } from "./routes/bookings";
 import { clubMessagesRouter } from "./routes/clubMessages";
 import { tournamentsRouter } from "./routes/tournaments";
 import { statsRouter } from "./routes/stats";
+import { prisma } from "./lib/prisma";
 
 const app = express();
 
